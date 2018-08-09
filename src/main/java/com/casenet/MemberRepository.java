@@ -11,16 +11,36 @@ package com.casenet;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
+/**
+ * The Class MemberRepository.
+ */
 @Repository
 public class MemberRepository {
 
-    @PersistenceContext
+    /** The Constant FIND_MEMBERS_BY_DIAGNOSIS. */
+    private static final String FIND_MEMBERS_BY_DIAGNOSIS = "SELECT m FROM Member m JOIN m.diagnosis d WHERE d.description = :diagnosisDescription";
+    
+	/** The em. */
+	@PersistenceContext
     EntityManager em;
 
-    public List<Member> findMembersByDiagnosis(String diagnosisDescription) {
-        return null;
+    /**
+     * Find members by diagnosis.
+     *
+     * @param diagnosisDescription the diagnosis description
+     * @return the list
+     */
+    @SuppressWarnings("unchecked")
+	public List<Member> findMembersByDiagnosis(String diagnosisDescription) {
+    	
+    	Query query = em.createQuery(FIND_MEMBERS_BY_DIAGNOSIS);
+    	query.setParameter("diagnosisDescription", diagnosisDescription);
+    	
+        return (List<Member>)query.getResultList();
     }
 
 }
